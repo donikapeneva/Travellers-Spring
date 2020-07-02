@@ -1,60 +1,75 @@
 package com.dreamix.travelers.utility.request;
 
+
 public class SearchCriteria {
-    private String sortBy;
-    private String sortById;
-    private String filterBy;
-    private Integer filterById;
-    private String groupBy;
+    private String filterByUser;
+    private String filterByCity;
+    private String filterByCountry;
+    private String sortByUser;
+    private String sortByCity;
+    private String sortByCountry;
+    private String sortByDate;
+
     private String dateFrom;
     private String dateTo;
+
     private Integer page;
     private Integer size;
 
-    public String getSortBy() {
-        return sortBy;
+    public String getFilterByUser() {
+        return filterByUser;
     }
 
-    public void setSortBy(String sortBy) {
-        this.sortBy = sortBy;
+    public void setFilterByUser(String filterByUser) {
+        this.filterByUser = filterByUser;
     }
 
-    public String getSortById() {
-        return sortById;
+    public String getFilterByCity() {
+        return filterByCity;
     }
 
-    public void setSortById(String sortById) {
-        this.sortById = sortById;
+    public void setFilterByCity(String filterByCity) {
+        this.filterByCity = filterByCity;
     }
 
-    public String getFilterBy() {
-        return filterBy;
+    public String getFilterByCountry() {
+        return filterByCountry;
     }
 
-    public void setFilterBy(String filterBy) {
-        this.filterBy = filterBy;
+    public void setFilterByCountry(String filterByCountry) {
+        this.filterByCountry = filterByCountry;
     }
 
-    public Integer getFilterById() {
-        return filterById;
+    public String getSortByUser() {
+        return sortByUser;
     }
 
-    public void setFilterById(String filterById) {
-        Integer intValue = null;
-        try {
-            intValue = Integer.parseInt(filterById);
-        } catch (NumberFormatException e){
-            System.out.println("OOOPS! filterById cannot be converted to int");
-        }
-        this.filterById = intValue;
+    public void setSortByUser(String sortByUser) {
+        this.sortByUser = sortByUser;
     }
 
-    public String getGroupBy() {
-        return groupBy;
+    public String getSortByCity() {
+        return sortByCity;
     }
 
-    public void setGroupBy(String groupBy) {
-        this.groupBy = groupBy;
+    public void setSortByCity(String sortByCity) {
+        this.sortByCity = sortByCity;
+    }
+
+    public String getSortByCountry() {
+        return sortByCountry;
+    }
+
+    public void setSortByCountry(String sortByCountry) {
+        this.sortByCountry = sortByCountry;
+    }
+
+    public String getSortByDate() {
+        return sortByDate;
+    }
+
+    public void setSortByDate(String sortByDate) {
+        this.sortByDate = sortByDate;
     }
 
     public String getDateFrom() {
@@ -91,12 +106,14 @@ public class SearchCriteria {
 
     @Override
     public String toString() {
-        return "SearchDTO{" +
-                "sortBy='" + sortBy + '\'' +
-                ", sortById='" + sortById + '\'' +
-                ", filterBy='" + filterBy + '\'' +
-                ", filterById='" + filterById + '\'' +
-                ", groupBy='" + groupBy + '\'' +
+        return "SearchCriteria{" +
+                "filterByUser='" + filterByUser + '\'' +
+                ", filterByCity='" + filterByCity + '\'' +
+                ", filterByCountry='" + filterByCountry + '\'' +
+                ", sortByUser='" + sortByUser + '\'' +
+                ", sortByCity='" + sortByCity + '\'' +
+                ", sortByCountry='" + sortByCountry + '\'' +
+                ", sortByDate='" + sortByDate + '\'' +
                 ", dateFrom='" + dateFrom + '\'' +
                 ", dateTo='" + dateTo + '\'' +
                 ", page=" + page +
@@ -105,14 +122,17 @@ public class SearchCriteria {
     }
 
     public boolean isEmpty() {
-        return !(sortBy != null
-                || sortById != null
-                || filterBy != null
-                || filterById != null
-                || groupBy != null
+        return !(filterByUser != null
+                || filterByCity != null
+                || filterByCountry != null
+                || sortByUser != null
+                || sortByCity != null
+                || sortByCountry != null
+                || sortByDate != null
                 || dateFrom != null
                 || dateTo != null
                 || page != null
-                ||  size != null);
+                || size != null);
     }
+
 }

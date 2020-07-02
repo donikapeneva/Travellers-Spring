@@ -3,15 +3,18 @@ package com.dreamix.travelers.services;
 import com.dreamix.travelers.data.Adventure;
 import com.dreamix.travelers.repositories.AdventureRepository;
 import com.dreamix.travelers.utility.AdventureSpecifications;
+import com.dreamix.travelers.utility.Utility;
 import com.dreamix.travelers.utility.request.FilterByRules;
 import com.dreamix.travelers.utility.request.SortByRules;
 import com.dreamix.travelers.utility.request.SearchCriteria;
 import com.dreamix.travelers.utility.responce.AdventureResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,35 +43,31 @@ public class AdventureService {
     }
 
     public List<Adventure> getBySearchCriteria(SearchCriteria search) {
-//        String query = "Select * from adventure ";
-//        System.out.println("AdventureSpecifications > " +  AdventureSpecifications.hasUserId(search.getFilterById()));
 
-        if(FilterByRules.USER_ID.getValue().equalsIgnoreCase(search.getFilterBy())) {
-            if(search.getFilterById() != null){
-                //todo: queryBuilder
-                return adventureRepository.findAllByUserId(search.getFilterById());
-            }
+        AdventureSpecifications specifications = new AdventureSpecifications(search);
+        Specification<Adventure> adventureSpecificSearch = specifications.getSpecifiedCriteria();
+
+        List<Adventure> result = adventureRepository.findAll(adventureSpecificSearch);
+
+
+        if(search.getSortByUser() != null) {
+//            result = result.sort();
         }
 
-        if(FilterByRules.CITY.getValue().equalsIgnoreCase(search.getFilterBy())) {
-            if(search.getFilterById() != null){
-                return adventureRepository.findAllByCity_id(search.getFilterById());
-            }
+        if(search.getSortByCity() != null) {
+//            result = result.sort();
         }
 
-        if(FilterByRules.COUNTY.getValue().equalsIgnoreCase(search.getFilterBy())) {
-            if(search.getFilterById() != null){
-                //todo JOIN
-//                return adventureRepository.findAllByCountryId(search.getFilterById());
-            }
+        if(search.getSortByCountry() != null) {
+//            result = result.sort();
         }
 
-        if(SortByRules.TIME.getValue().equalsIgnoreCase(search.getSortBy())){
-            return adventureRepository.findAllByOrderByTimeDesc();
+        if(search.getSortByDate() != null) {
+//            result = result.sort();
         }
 
-        //empty collection
-        return null;
+        return result;
+
     }
 
     public Adventure create(Adventure newAdventure) {

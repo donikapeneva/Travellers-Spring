@@ -21,6 +21,7 @@ public class AdventureController {
         System.out.println(">>>>>>>>>>" + searchCriteria);
 
         if (searchCriteria.isEmpty()) {
+            //todo sorted by date
             return adventureService.getAll();
         } else {
             return adventureService.getBySearchCriteria(searchCriteria);

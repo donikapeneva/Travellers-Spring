@@ -8,80 +8,96 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.time.LocalDateTime;
 
 public class AdventureSpecifications {
 
     private SearchCriteria criteria;
+    private Specification<Adventure> buildedCriteria;
 
-    public static Specification<Adventure> hasUserId(Integer userId) {
+    public AdventureSpecifications(SearchCriteria criteria) {
+        this.criteria = criteria;
+        this.buildedCriteria = getEmptyCriteria();
+    }
+
+    public Specification<Adventure> getSpecifiedCriteria() {
+
+        if (criteria.getFilterByUser() != null) {
+            buildedCriteria = buildedCriteria.and(AdventureSpecifications.hasUserId(criteria.getFilterByUser()));
+        }
+
+        if (criteria.getFilterByCity() != null) {
+            buildedCriteria = buildedCriteria.and(AdventureSpecifications.hasCityId(criteria.getFilterByCity()));
+        }
+
+        if (criteria.getFilterByCountry() != null) {
+            buildedCriteria = buildedCriteria.and(AdventureSpecifications.hasCountryId(criteria.getFilterByCountry()));
+        }
+
+        if (criteria.getDateFrom() != null) {
+            buildedCriteria = buildedCriteria.and(AdventureSpecifications.hasDateRange(criteria.getDateFrom(), criteria.getDateTo()));
+        }
+
+        return buildedCriteria;
+    }
+
+    public static Specification<Adventure> hasUserId(String id) {
+        Integer userId = Utility.stringToInteger(id);
+
         return new Specification<Adventure>() {
             @Override
             public Predicate toPredicate(Root<Adventure> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-//
-//                    if (criteria.getOperation().equalsIgnoreCase(">")) {
-//                        return builder.greaterThanOrEqualTo(
-//                                root.<String> get(criteria.getKey()), criteria.getValue().toString());
-//                    }
-//                    else if (criteria.getOperation().equalsIgnoreCase("<")) {
-//                        return builder.lessThanOrEqualTo(
-//                                root.<String> get(criteria.getKey()), criteria.getValue().toString());
-//                    }
-//                    else if (criteria.getOperation().equalsIgnoreCase(":")) {
-//                        if (root.get(criteria.getKey()).getJavaType() == String.class) {
-//                            return builder.like(
-//                                    root.<String>get(criteria.getKey()), "%" + criteria.getValue() + "%");
-//                        } else {
-//                            return builder.equal(root.get(criteria.getKey()), criteria.getValue());
-//                        }
-//                    }
-//                    return null;
-//                }
-                System.out.println("root.get(\"Adventure_.userId\") = " + root.get("Adventure_.userId"));
-                System.out.println("root.get(\"Adventure.userId\") = " + root.get("Adventure.userId"));
-                System.out.println("root.get(\"userId\") = " + root.get("userId"));
-                return criteriaBuilder.equal(root.get("Adventure_.userId"), userId );
+                System.out.println("root.get(\"userId\") = " + root.get("user_id"));
+                return criteriaBuilder.equal(root.get("user_id"), userId);
             }
-
         };
     }
 
-    public static Specification<Adventure> hasUserSame(Integer userId) {
+    public static Specification<Adventure> hasCityId(String id) {
+        Integer cityId = Utility.stringToInteger(id);
+
         return new Specification<Adventure>() {
             @Override
             public Predicate toPredicate(Root<Adventure> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-//
-//                    if (criteria.getOperation().equalsIgnoreCase(">")) {
-//                        return builder.greaterThanOrEqualTo(
-//                                root.<String> get(criteria.getKey()), criteria.getValue().toString());
-//                    }
-//                    else if (criteria.getOperation().equalsIgnoreCase("<")) {
-//                        return builder.lessThanOrEqualTo(
-//                                root.<String> get(criteria.getKey()), criteria.getValue().toString());
-//                    }
-//                    else if (criteria.getOperation().equalsIgnoreCase(":")) {
-//                        if (root.get(criteria.getKey()).getJavaType() == String.class) {
-//                            return builder.like(
-//                                    root.<String>get(criteria.getKey()), "%" + criteria.getValue() + "%");
-//                        } else {
-//                            return builder.equal(root.get(criteria.getKey()), criteria.getValue());
-//                        }
-//                    }
-//                    return null;
-//                }
-                System.out.println("root.get(\"Adventure_.userId\") = " + root.get("Adventure_.userId"));
-                System.out.println("root.get(\"Adventure.userId\") = " + root.get("Adventure.userId"));
-                System.out.println("root.get(\"userId\") = " + root.get("userId"));
-                return criteriaBuilder.equal(root.get("Adventure_.userId"), userId );
-            }
 
+                System.out.println("root.get(\"city_id\") = " + root.get("city_id"));
+                return criteriaBuilder.equal(root.get("city_id"), cityId);
+            }
         };
     }
 
-//    public static Specification<Adventure> isLongTermCustomer() {
-//        return new Specification<Adventure> {
-//            public Predicate toPredicate(Root<T> root, CriteriaQuery query, CriteriaBuilder cb) {
-//                return cb.lessThan(root.get(Customer_.createdAt), new LocalDate.minusYears(2));
-//            }
-//        };
-//    }
+    public static Specification<Adventure> hasCountryId(String id) {
+        Integer contryId = Utility.stringToInteger(id);
+
+        return new Specification<Adventure>() {
+            @Override
+            public Predicate toPredicate(Root<Adventure> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                System.out.println("root.get(\"country_id\") = " + root.get("city").get("country_id"));
+                return criteriaBuilder.equal(root.get("city").get("country_id"), contryId);
+            }
+        };
+    }
+
+    public static Specification<Adventure> hasDateRange(String dateFromAsString, String dateToAsString) {
+
+        LocalDateTime dateFrom = Utility.stringToLocalDateTime(dateFromAsString);
+        LocalDateTime dateTo = Utility.stringToLocalDateTime(dateToAsString);
+
+        return new Specification<Adventure>() {
+            @Override
+            public Predicate toPredicate(Root<Adventure> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                System.out.println("root.get(\"time between\") = dateFrom= " + dateFrom + " dateTo=" + dateTo);
+
+                return dateFrom != null && dateTo != null ? criteriaBuilder.between(root.get("time"), dateFrom, dateTo)
+                        : dateFrom != null ? criteriaBuilder.greaterThanOrEqualTo(root.get("time"), dateFrom)
+                        : criteriaBuilder.lessThanOrEqualTo(root.get("time"), dateTo);
+
+            }
+        };
+    }
+
+    private Specification<Adventure> getEmptyCriteria() {
+        return Specification.where(null);
+    }
+
 }

@@ -1,13 +1,10 @@
 # Travellers
 
 Purpose: learn the basics
-> Basic SpringBoot
-> Restfull API
+> Basic SpringBoot | Restfull API
 
 Stack: 
-> Java, SpringBoot
-> DB: SQL, flyway
-> Maven
+> Java, SpringBoot | SQL, flyway | Maven
 
 
 API model

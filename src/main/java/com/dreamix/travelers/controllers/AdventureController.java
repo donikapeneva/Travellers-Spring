@@ -1,6 +1,6 @@
 package com.dreamix.travelers.controllers;
 
-import com.dreamix.travelers.data.Adventure;
+import com.dreamix.travelers.controllers.dtos.AdventureDto;
 import com.dreamix.travelers.services.AdventureService;
 import com.dreamix.travelers.utility.request.SearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+//import com.sun.javaws.exceptions.InvalidArgumentException;
 
 @RestController
 @RequestMapping({"/adventures"})
@@ -17,9 +19,7 @@ public class AdventureController {
 
     @GetMapping
     //todo: AdventureResponse
-    public List<Adventure> getAdventures(SearchCriteria searchCriteria) {
-        System.out.println(">>>>>>>>>>" + searchCriteria);
-
+    public List<AdventureDto> getAdventures(SearchCriteria searchCriteria) {
         if (searchCriteria.isEmpty()) {
             //todo sorted by date
             return adventureService.getAll();
@@ -29,21 +29,27 @@ public class AdventureController {
     }
 
     @GetMapping("/{id}")
-    public Adventure getById(@PathVariable int id) {
+    public AdventureDto getById(@PathVariable int id) {
         return adventureService.getById(id);
     }
 
 
-    @PostMapping
+    @PostMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public Adventure create(@RequestBody Adventure adventure) {
-        return adventureService.create(adventure);
+    public AdventureDto create(@RequestBody AdventureDto adventure) {
+
+        AdventureDto newAdventure = null;
+        newAdventure = adventureService.create(adventure);
+
+        return newAdventure;
     }
 
+
     @PutMapping("{adventureId}")
-    public Adventure update(@PathVariable int adventureId, @RequestBody Adventure updated) {
+    public AdventureDto update(@PathVariable int adventureId, @RequestBody AdventureDto updated) {
         return adventureService.update(updated, adventureId);
     }
+
 
     @DeleteMapping("{adventureId}")
     public void delete(@PathVariable int adventureId) {

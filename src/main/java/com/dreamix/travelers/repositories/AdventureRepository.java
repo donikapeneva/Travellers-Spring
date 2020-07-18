@@ -11,6 +11,6 @@ public interface AdventureRepository extends JpaRepository<Adventure, Integer>, 
 
     public List<Adventure> findAllByUserId(int userId);
     public List<Adventure> findAllByOrderByTimeDesc();
-    public List<Adventure> findAllByCity_id(int cityId);
+//    public List<Adventure> findAllByCity_id(int cityId);
 
 }

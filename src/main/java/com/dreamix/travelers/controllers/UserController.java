@@ -1,18 +1,15 @@
 package com.dreamix.travelers.controllers;
 
-import com.dreamix.travelers.data.Adventure;
-import com.dreamix.travelers.data.User;
+import com.dreamix.travelers.controllers.dtos.AdventureDto;
+import com.dreamix.travelers.controllers.dtos.UserRequestDto;
+import com.dreamix.travelers.controllers.dtos.UserResponseDto;
 import com.dreamix.travelers.services.AdventureService;
 import com.dreamix.travelers.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -23,36 +20,38 @@ public class UserController {
     private AdventureService adventureService;
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
         return this.userService.getAllActive();
     }
 
     @GetMapping
     @RequestMapping("/{userId}")
-    public User get(@PathVariable int userId) {
+    public UserResponseDto get(@PathVariable int userId) {
         return this.userService.getById(userId);
     }
 
     @GetMapping
     @RequestMapping("/{userId}/adventures")
-    public List<Adventure> getAdventuresByUserId(@PathVariable int userId) {
+    public List<AdventureDto> getAdventuresByUserId(@PathVariable int userId) {
         return this.adventureService.getByUserId(userId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(@RequestBody User user) {
-        return userService.create(user);
+    public UserResponseDto create(@RequestBody UserRequestDto user) {
+        UserResponseDto newUser = userService.create(user);
+
+        return newUser;
     }
 
     @PutMapping("/{userId}")
-    public User update(@PathVariable int userId, @RequestBody User updated) {
-        return userService.update(updated, userId);
+    public UserResponseDto update(@PathVariable int userId, @RequestBody UserRequestDto updates) {
+
+        return userService.update(updates, userId);
     }
 
     @DeleteMapping("/{userId}")
     public void delete(@PathVariable int userId) {
-        //TODO: update, not actual delete
         userService.delete(userId);
     }
 

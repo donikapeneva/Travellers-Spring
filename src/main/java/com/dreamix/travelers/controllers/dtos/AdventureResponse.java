@@ -1,4 +1,4 @@
-package com.dreamix.travelers.utility.responce;
+package com.dreamix.travelers.controllers.dtos;
 
 import java.util.List;
 

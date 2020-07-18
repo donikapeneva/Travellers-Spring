@@ -1,55 +1,72 @@
 package com.dreamix.travelers.services;
 
+import com.dreamix.travelers.controllers.dtos.UserRequestDto;
+import com.dreamix.travelers.controllers.dtos.UserResponseDto;
+import com.dreamix.travelers.controllers.exceptionHandling.CustomBadRequestException;
+import com.dreamix.travelers.controllers.mappers.DtoToRecord;
+import com.dreamix.travelers.controllers.mappers.RecordToDto;
 import com.dreamix.travelers.data.User;
 import com.dreamix.travelers.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> getAllActive() {
-        return this.userRepository.findByIsActiveTrue();
+    public List<UserResponseDto> getAllActive() {
+        List<User> userRecords = this.userRepository.findByIsActiveTrue();
+
+        return userRecords.stream().map(RecordToDto::UserRecordToUserDto).collect(Collectors.toList());
     }
 
-    public User getById(Integer id) {
+    public UserResponseDto getById(Integer id) {
         Optional<User> user = this.userRepository.findById(id);
-        if(user.isPresent()){
-            return user.get();
+
+        if (user.isPresent()) {
+            return RecordToDto.UserRecordToUserDto(user.get());
         }
+
         return null;
     }
 
-    public User create(User newUser) {
-        //todo UserDTO
-        User record = userRepository.findByEmail(newUser.getEmail());
-        if(record != null) {
-            return null;
-        }
-        newUser.setActive(true);
-        User user = userRepository.saveAndFlush(newUser);
+    public UserResponseDto create(UserRequestDto newUser) {
+        validateOnCreate(newUser);
+        User record = userRepository.findByEmailOrUsername(newUser.getEmail(), newUser.getUsername());
 
-        return user;
+        if (record != null) {
+            throw new CustomBadRequestException("Username or mail already exist");
+        }
+
+        User user = DtoToRecord.UserRequestDtoToUserRecord(newUser);
+        user.setIsActive(true);
+
+        user = userRepository.saveAndFlush(user);
+
+        return RecordToDto.UserRecordToUserDto(user);
     }
 
     public void delete(int id) {
         Optional<User> record = userRepository.findById(id);
-        if(record.isPresent()) {
+
+        if (record.isPresent()) {
             User user = record.get();
-            user.setActive(false);
+            user.setIsActive(false);
 
             userRepository.flush();
         }
     }
 
-    public User update(User updatedUser, int id) {
+    public UserResponseDto update(UserRequestDto updatedUser, int id) {
         Optional<User> record = userRepository.findById(id);
-        if(!record.isPresent()) {
+
+        if (!record.isPresent()) {
             return null;
         }
 
@@ -61,6 +78,40 @@ public class UserService {
 
         userRepository.flush();
 
-        return user;
+        return RecordToDto.UserRecordToUserDto(user);
+    }
+
+    private void validateOnCreate(UserRequestDto newUser) {
+        boolean isUsernameValid = newUser.getUsername() != null;
+        boolean isEmailValid = newUser.getEmail() != null;
+        boolean isPassValid = newUser.getPassword() != null;
+        boolean isFirstNameValid = newUser.getFirstName() != null;
+        boolean isLastNameValid = newUser.getLastName() != null;
+
+        List<String> exceptionMessages = new ArrayList<String>();
+
+        if (!isUsernameValid) {
+            exceptionMessages.add("Param username or password is not invalid.");
+        }
+
+        if (!isEmailValid) {
+            exceptionMessages.add("Param email is invalid.");
+        }
+
+        if (!isPassValid) {
+            exceptionMessages.add("Param username or password is not invalid.");
+        }
+
+        if (!isFirstNameValid) {
+            exceptionMessages.add("Param firstName is invalid.");
+        }
+
+        if (!isLastNameValid) {
+            exceptionMessages.add("Param lastName is invalid.");
+        }
+
+        if (!exceptionMessages.isEmpty()) {
+            throw new CustomBadRequestException(String.join(" ", exceptionMessages));
+        }
     }
 }

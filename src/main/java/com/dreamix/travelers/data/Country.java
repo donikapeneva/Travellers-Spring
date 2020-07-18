@@ -1,8 +1,17 @@
 package com.dreamix.travelers.data;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.context.annotation.Lazy;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
+@Data
+@NoArgsConstructor
 @Entity(name = "country")
 public class Country {
     @Id
@@ -10,42 +19,11 @@ public class Country {
     private Integer id;
 
     private String name;
-    private String country_code;
+    @Column(name="country_code")
+    private String countryCode;
 
-    @OneToMany(mappedBy = "country")
-    private Set<City> cities;
+//    @OneToMany(mappedBy = "country")
+//    @Lazy
+//    private Set<City> cities = new HashSet<>();
 
-    public Country() {};
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCountry_code() {
-        return country_code;
-    }
-
-    public void setCountry_code(String country_code) {
-        this.country_code = country_code;
-    }
-//
-//    public Set<City> getCities() {
-//        return cities;
-//    }
-//
-//    public void setCities(Set<City> cities) {
-//        this.cities = cities;
-//    }
 }

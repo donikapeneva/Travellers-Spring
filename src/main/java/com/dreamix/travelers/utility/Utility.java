@@ -13,6 +13,16 @@ public class Utility {
         return intValue;
     }
 
+    public static Long stringToLong(String number) {
+        Long longValue = null;
+        try {
+            longValue = Long.parseLong(number);
+        } catch (NumberFormatException e){
+            System.out.println("OOOPS! " + number + " cannot be converted to int");
+        }
+        return longValue;
+    }
+
     public static LocalDateTime stringToLocalDateTime(String dateAsString) {
         LocalDateTime date = null;
         try {

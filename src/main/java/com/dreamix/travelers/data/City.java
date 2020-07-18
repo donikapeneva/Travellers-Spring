@@ -1,7 +1,16 @@
 package com.dreamix.travelers.data;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
+@Data
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity(name = "city")
 public class City {
     @Id
@@ -9,43 +18,11 @@ public class City {
     private Integer id;
 
     private String name;
-    private Integer country_id;
+    @Column(name="country_id")
+    private Integer countryId;
 
     @ManyToOne
     @JoinColumn(name = "country_id", insertable = false, updatable = false)
     private Country country;
 
-    public City() {}
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getCountry_id() {
-        return country_id;
-    }
-
-    public void setCountry_id(Integer country_id) {
-        this.country_id = country_id;
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
-    }
 }

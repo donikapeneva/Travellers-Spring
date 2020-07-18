@@ -8,4 +8,5 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Integer> {
     public List<User> findByIsActiveTrue();
     public User findByEmail(String email);
+    public User findByEmailOrUsername(String email, String username);
 }

@@ -60,7 +60,7 @@ public class AdventureSpecifications {
             @Override
             public Predicate toPredicate(Root<Adventure> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 
-                System.out.println("root.get(\"city_id\") = " + root.get("city_id"));
+//                System.out.println("root.get(\"city_id\") = " + root.get("city_id"));
                 return criteriaBuilder.equal(root.get("city_id"), cityId);
             }
         };

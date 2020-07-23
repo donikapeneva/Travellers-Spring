@@ -1,19 +1,18 @@
 package com.dreamix.travelers.controllers;
 
+import com.dreamix.travelers.controllers.dtos.CityDto;
+import com.dreamix.travelers.controllers.dtos.CountryDto;
 import com.dreamix.travelers.data.City;
 import com.dreamix.travelers.data.Country;
 import com.dreamix.travelers.services.CityService;
 import com.dreamix.travelers.services.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/countries")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PlaceController {
 
     @Autowired
@@ -23,20 +22,27 @@ public class PlaceController {
     CityService cityService;
 
     @GetMapping
-    public List<Country> getAllCountries() {
+    @RequestMapping("/countries")
+    public List<CountryDto> getAllCountries() {
         return this.countryService.getAllCountries();
     }
 
     @GetMapping
-    @RequestMapping("/{countryId}")
-    public Country getCountryById(@PathVariable int countryId) {
+    @RequestMapping("/countries/{countryId}")
+    public CountryDto getCountryById(@PathVariable int countryId) {
         return this.countryService.getById(countryId);
     }
 
     @GetMapping
-    @RequestMapping("/{countryId}/cities")
-    public List<City> getCitiesByCountryId(@PathVariable int countryId) {
+    @RequestMapping("/countries/{countryId}/cities")
+    public List<CityDto> getCitiesByCountryId(@PathVariable int countryId) {
         return this.cityService.getCitiesByCountryId(countryId);
+    }
+
+    @GetMapping
+    @RequestMapping("/cities")
+    public List<CityDto> getAllCities() {
+        return this.cityService.getAllCities();
     }
 
 

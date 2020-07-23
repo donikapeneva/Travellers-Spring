@@ -5,12 +5,12 @@ import com.dreamix.travelers.controllers.dtos.ImageResponseDto;
 import com.dreamix.travelers.services.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ImageController {
     @Autowired
     ImageService imageService;
@@ -34,5 +34,13 @@ public class ImageController {
     @DeleteMapping(path = {"/images/{imageId}"})
     public void getImage(@PathVariable("imageId") String id) {
         imageService.deleteById(id);
+    }
+
+    @GetMapping(value = "/images/{adventureId}/cover")
+    public ImageResponseDto getCoverImage(@PathVariable("adventureId") String adventureId) {
+        ImageResponseDto image = imageService.getCoverImage(adventureId);
+
+
+        return image;
     }
 }

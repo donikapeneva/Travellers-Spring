@@ -9,19 +9,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//import com.sun.javaws.exceptions.InvalidArgumentException;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping({"/adventures"})
 public class AdventureController {
     @Autowired
     private AdventureService adventureService;
 
     @GetMapping
-    //todo: AdventureResponse
     public List<AdventureDto> getAdventures(SearchCriteria searchCriteria) {
         if (searchCriteria.isEmpty()) {
-            //todo sorted by date
             return adventureService.getAll();
         } else {
             return adventureService.getBySearchCriteria(searchCriteria);
@@ -52,6 +50,7 @@ public class AdventureController {
 
 
     @DeleteMapping("{adventureId}")
+    @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable int adventureId) {
         adventureService.delete(adventureId);
     }

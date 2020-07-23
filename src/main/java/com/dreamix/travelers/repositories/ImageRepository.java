@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ImageRepository extends JpaRepository<ImageAdventure, Long> {
     List<ImageAdventure> findAllByAdventureId(Integer adventureId);
+    ImageAdventure findFirstByAdventureId(Integer adventureId);
 }

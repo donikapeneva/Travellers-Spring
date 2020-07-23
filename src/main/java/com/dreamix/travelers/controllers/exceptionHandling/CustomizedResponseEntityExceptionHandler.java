@@ -16,7 +16,7 @@ public class CustomizedResponseEntityExceptionHandler {
     public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false));
-
+        System.out.println(exceptionResponse);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -24,7 +24,7 @@ public class CustomizedResponseEntityExceptionHandler {
     public final ResponseEntity<ExceptionResponse> handleCustomBadRequestException(CustomBadRequestException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
                 request.getDescription(false));
-
+        System.out.println(exceptionResponse);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 }

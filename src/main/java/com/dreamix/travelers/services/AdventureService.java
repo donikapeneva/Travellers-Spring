@@ -37,7 +37,9 @@ public class AdventureService {
         List<Adventure> adventuresRecords = this.adventureRepository.findAll();
 
         List<AdventureDto> adventures = adventuresRecords.stream()
+                .filter((adventure -> !adventure.getIsDeleted()))
                 .map(RecordToDto::AdventureRecordToAdventureDto)
+                .sorted((o1, o2) -> o2.getTime().compareTo(o1.getTime()))
                 .collect(Collectors.toList());
 
         return adventures;
@@ -95,7 +97,7 @@ public class AdventureService {
         adventure.setUserId(newAdventure.getUserId());
 
         //  todo move to utility
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
             date = format.parse(newAdventure.getTime());
@@ -116,11 +118,12 @@ public class AdventureService {
         adventureValidationService.validateOnCreate(adventure);
 
         Adventure createdAdventure = adventureRepository.saveAndFlush(adventure);
+        AdventureDto adventureDto = RecordToDto.AdventureRecordToAdventureDto(createdAdventure);
 
-        return RecordToDto.AdventureRecordToAdventureDto(createdAdventure);
+        return adventureDto;
     }
 
-    public void delete(int id) {
+    public boolean delete(int id) {
         Optional<Adventure> record = adventureRepository.findById(id);
         if (record.isPresent()) {
             Adventure adventure = record.get();
@@ -128,6 +131,8 @@ public class AdventureService {
             adventure.setLastUpdated(LocalDateTime.now());
             adventureRepository.flush();
         }
+
+        return true;
     }
 
     public AdventureDto update(AdventureDto updatedAdventure, int id) {
